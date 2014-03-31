@@ -1,0 +1,102 @@
+import java.awt.BasicStroke;
+import java.awt.Color;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+
+public class Square extends Shape {
+	private static final long serialVersionUID = 1L;
+	private int length;
+	private int x3, y3, x4, y4, x22, y22;
+
+	Square(int x1, int y1, int x2, int y2, Color cc) {
+		super(x1, y1, x2, y2, cc);
+		type = 4;
+		this.length = Math.abs(x2 - x1);
+		if (x1 > x2) {
+			x4 = x1;
+			x3 = x1 - length;
+			x22 = x1 - length;
+		} else {
+			x4 = x1;
+			x3 = x1 + length;
+			x22 = x1 + length;
+		}
+		if (y1 > y2) {
+			y3 = y1;
+			y4 = y1 - length;
+			y22 = y1 - length;
+		} else {
+			y3 = y1;
+			y4 = y1 + length;
+			y22 = y1 + length;
+		}
+	}
+
+	public boolean checkSelected(int x, int y) {
+		int dx1, dy1, c1, dx2, dy2, c2, dx3, dy3, c3, dx4, dy4, c4;
+		dx1 = x3 - x1;
+		dy1 = y3 - y1;
+		dx2 = x3 - x2;
+		dy2 = y3 - y2;
+		dx3 = x4 - x2;
+		dy3 = y4 - y2;
+		dx4 = x1 - x4;
+		dy4 = y1 - y4;
+		c1 = dx1 * y1 - dy1 * x1;
+		c2 = dx2 * y2 - dy2 * x2;
+		c3 = dx3 * y2 - dy3 * x2;
+		c4 = dx4 * y4 - dy4 * x4;
+		int xx= Math.min(x1, x2);
+		int xl= Math.max(x1, x2);
+		int yy= Math.min(y1, y2);
+		int yl= Math.max(y1, y2);
+		if(x>=(xx) && x<=(xl) && y>=(yy) && y<=(yl))
+		{
+			if (Math.abs(dx1 * y - dy1 * x - c1) < 1000)
+				return true;
+			else if (Math.abs(dx2 * y - dy2 * x - c2) < 1000)
+				return true;
+			else if (Math.abs(dx3 * y - dy3 * x - c3) < 1000)
+				return true;
+			else if (Math.abs(dx4 * y - dy4 * x - c4) < 1000)
+				return true;
+			else
+				return false;
+		}
+		else
+			return false;
+	}
+
+	public boolean checkCorners(int x, int y)
+	{
+		if(x >= x1-2 && x<= x1+3 && y >= y1-2 && y <= y1+3
+		|| x >= x22-2 && x<= x22+3 && y >= y22-2 && y <= y22+3
+		|| x >= x3-2 && x<= x3+3 && y >= y3-2 && y <= y3+3
+		|| x >= x4-2 && x<= x4+3 && y >= y4-2 && y <= y4+3)
+		{
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+	}
+	@Override
+	public void paint(Graphics g2d) {
+		// TODO Auto-generated method stub
+		super.paint(g2d);
+		g2d.drawLine(x1, y1, x3, y3);
+		g2d.drawLine(x1, y1, x4, y4);
+		g2d.drawLine(x3, y3, x22, y22);
+		g2d.drawLine(x4, y4, x22, y22);
+		if(selected == true)
+		{
+			((Graphics2D)g2d).setStroke(new BasicStroke(2));
+			g2d.setColor(Color.BLACK);
+			g2d.fillRect(x1-2, y1-2, 5, 5);
+			g2d.fillRect(x22-2, y22-2, 5, 5);
+			g2d.fillRect(x3-2, y3-2, 5, 5);
+			g2d.fillRect(x4-2, y4-2, 5, 5);
+		}
+	}
+}
